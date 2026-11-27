@@ -1,0 +1,165 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* dark mode is the .dark class on <html>: app/layout.tsx sets it before the first paint, the theme switch after */
+@custom-variant dark (&:is(.dark *));
+
+/* shadcn/ui's tokens in Vercel's Geist look (DESIGN.md): a near-white canvas, white hairline-bordered cards, one
+   near-black ink, the blue only for focus. Secondary text is #666 rather than DESIGN.md's #8f8f8f, which small text
+   can't read on white (3.3:1); the dark side follows Geist's dark palette */
+:root {
+  color-scheme: light;
+  --radius: 0.5rem; /* rounded-md 6px for buttons and inputs, rounded-xl 12px for cards */
+  --background: #fafafa;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #171717;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f2f2;
+  --secondary-foreground: #171717;
+  --muted: #f2f2f2;
+  --muted-foreground: #666666;
+  --accent: #f2f2f2;
+  --accent-foreground: #171717;
+  --destructive: #ee0000;
+  --border: #ebebeb;
+  --input: #ebebeb;
+  --ring: #0070f3;
+  --float: 0 2px 2px rgb(0 0 0 / 4%), 0 8px 16px -4px rgb(0 0 0 / 4%);
+
+  /* tier names: neon on dark, dark enough for 4.5:1 on white and the muted grays (small text, WCAG AA) */
+  --tier-stone: #69717d;
+  --tier-copper: #b94f16;
+  --tier-iron: #5c728c;
+  --tier-gold: #916800;
+  --tier-diamond: #007b8e;
+  --tier-emerald: #007f40;
+  --tier-netherite: #7a4aff;
+  --tier-master: #d20f90;
+  --win: #18864b;
+  --loss: #cf3b33;
+  /* the Elo chart's line (Vercel blue): 3:1 or more on the card, checked with the dataviz skill's validator */
+  --chart-1: #0070f3;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card: #111111;
+  --card-foreground: #ededed;
+  --popover: #111111;
+  --popover-foreground: #ededed;
+  --primary: #ededed;
+  --primary-foreground: #0a0a0a;
+  --secondary: #1f1f1f;
+  --secondary-foreground: #ededed;
+  --muted: #1f1f1f;
+  --muted-foreground: #a1a1a1;
+  --accent: #1f1f1f;
+  --accent-foreground: #ededed;
+  --destructive: #ff6166;
+  --border: #2e2e2e;
+  --input: #2e2e2e;
+  --ring: #3291ff;
+  --float: 0 2px 2px rgb(0 0 0 / 30%), 0 8px 16px -4px rgb(0 0 0 / 40%);
+
+  --tier-stone: #d6dde6;
+  --tier-copper: #ff8a4c;
+  --tier-iron: #dbe6f3;
+  --tier-gold: #ffd23f;
+  --tier-diamond: #3ef0ff;
+  --tier-emerald: #39ff88;
+  --tier-netherite: #b98cff;
+  --tier-master: #ff4fd8;
+  --win: #3fcf80;
+  --loss: #ff6a5f;
+  --chart-1: #3291ff;
+}
+
+@theme inline {
+  /* Geist has no Hangul: Korean falls through to IBM Plex Sans KR */
+  --font-sans: var(--font-geist), var(--font-plex), system-ui, -apple-system, "Malgun Gothic", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow-float: var(--float);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-win: var(--win);
+  --color-loss: var(--loss);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  /* what Tab or a #link scrolls to stays out from under the sticky top bar (components/TopBar.tsx): two rows (101px)
+     on a phone, one (61px) from sm on */
+  html {
+    scroll-padding-top: 7.5rem;
+  }
+  @media (width >= 40rem) {
+    html {
+      scroll-padding-top: 4.75rem;
+    }
+  }
+}
+
+/* Minecraft textures stay sharp when scaled up */
+@utility pixelated {
+  image-rendering: pixelated;
+}
+
+/* the top three ranks wear medal colors; dark digits read on all three in both themes */
+@utility medal-1 {
+  background: linear-gradient(150deg, #f2c94c, #d9a514);
+  color: #1d1a14;
+}
+@utility medal-2 {
+  background: linear-gradient(150deg, #e1e5ea, #b4bcc6);
+  color: #1d1a14;
+}
+@utility medal-3 {
+  background: linear-gradient(150deg, #e3a26e, #b86f37);
+  color: #1d1a14;
+}
+
+/* the board while a kit tab's board is on the way (components/KitTabs.tsx) */
+[data-board] {
+  transition: opacity 0.15s;
+}
+main:has([data-pending]) [data-board] {
+  opacity: 0.5;
+}
+
+/* while the theme flips (components/TopBar.tsx) */
+.theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
